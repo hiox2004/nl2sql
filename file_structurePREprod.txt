@@ -1,0 +1,14 @@
+nl2sql/
+├── app.py              # Streamlit (W1-4)
+├── backend/
+│   ├── main.py         # FastAPI (W5)
+│   ├── router.py       # Tier routing
+│   └── validator.py    # Standards
+├── config.py
+├── rag.py              # Schema retrieval (W3)
+├── schema/
+│   └── spider.db       # Toy DB
+├── tests/
+│   └── eval.json       # 50 questions
+├── requirements.txt
+└── docker-compose.yml  # W9
