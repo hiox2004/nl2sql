@@ -16,10 +16,22 @@ st.sidebar.info(f"Using: {model}")
 # Input
 question = st.text_input("Ask SQL question:", placeholder="top 10 customers by revenue")
 
-if st.button("Generate SQL") and question:
-    with st.spinner("Converting..."):
+if st.button("Generate SQL and exectute") and question:
+    with st.spinner("Converting to SQL..."):
         prompt = f"You are an SQL expert. Your task is to create a SQL query for the following request in NL form, the output should be a valid SQL query and only that, no other words should be used. JUST THE SQL CODE: {question}\nSQL:"
         response = ollama.generate(model=model, prompt=prompt)
+        sql = response['response'].strip()
         
-        st.code(response['response'], language="sql")
-        st.success("✅ Generated!")
+        st.subheader("Generated SQL:")
+        st.code(sql, language="sql")
+        
+    with st.spinner("Executing SQL..."):
+        try:
+            conn = sqlite3.connect('ecommerce.db')
+            df =pd.read_sql_query(sql, conn)
+            conn.close()
+            st.subheader("Query Result:")
+            st.dataframe(df, use_container_width=True)
+            st.success("Query executed successfully!")
+        except Exception as e:
+            st.error(f"Error executing SQL: {e}")
